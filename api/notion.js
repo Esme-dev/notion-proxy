@@ -1,0 +1,20 @@
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type,Notion-Version');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const path = req.query.path || '';
+  const notionRes = await fetch('https://api.notion.com/v1/' + path, {
+    method: req.method,
+    headers: {
+      'Authorization': req.headers.authorization,
+      'Notion-Version': req.headers['notion-version'] || '2022-06-28',
+      'Content-Type': 'application/json'
+    },
+    body: req.method !== 'GET' ? JSON.stringify(req.body) : undefined
+  });
+
+  const data = await notionRes.json();
+  res.status(notionRes.status).json(data);
+}
