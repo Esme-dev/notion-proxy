@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const path = req.query.path || '';
-  const notionRes = await fetch('https://api.notion.com/v1/' + path, {
+  const notionRes = await fetch('https://api.notion.com/v1' + path, {
     method: req.method,
     headers: {
       'Authorization': req.headers.authorization,
